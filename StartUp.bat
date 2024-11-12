@@ -16,6 +16,25 @@ SET BACKEND_PORT=3000
 REM Set this variable if you don't want to start the container
 SET DONT_START=0
 
+
+set "dockerExecutable=C:\Program Files\Docker\Docker\Docker Desktop.exe"
+set "processName=Docker Desktop.exe"
+
+:: Check if Docker Desktop is running
+tasklist /FI "IMAGENAME eq %processName%" 2>NUL | find /I "%processName%" >NUL
+if %ERRORLEVEL% equ 0 (
+    echo Docker Desktop is running.
+) else (
+    echo Docker Desktop is not running.
+    echo Starting Docker Desktop...
+    start "" "%dockerExecutable%"
+    if %ERRORLEVEL% equ 0 (
+        echo Docker Desktop started successfully.
+    ) else (
+        echo Failed to start Docker Desktop.
+    )
+)
+
 REM Check if the container is running (if it is, set DONT_START to 1)
 ECHO Checking if container is already running
 docker ps | findstr /C:"%CONTAINER_NAME%" > nul
